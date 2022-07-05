@@ -7,8 +7,9 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import LancasterStemmer
 import rabin_karp
 import numpy as np
+import string
 from os.path import dirname, join
-# import re
+import re
 
 
 class PlagiarismChecker:
@@ -22,7 +23,7 @@ class PlagiarismChecker:
         self.calculate_hash(content_a, "a")
         self.calculate_hash(content_b, "b")
 
-    # calaculate hash value of the file content
+    # calculate hash value of the file content
     # and add it to the document type hash table
     def calculate_hash(self, content, doc_type):
         text = self.prepare_content(content)
@@ -59,23 +60,40 @@ class PlagiarismChecker:
         file = open(filename, 'r+', encoding="utf-8")
         return file.read()
 
-    # Prepare content by removing stopwords, steemming and tokenizing
+    # Prepare content by removing stopwords, stemming and tokenizing
     def prepare_content(self, content):
+
         # STOP WORDS
         stop_words = set(stopwords.words('english'))
-        # TOKENIZE
         word_tokens = word_tokenize(content)
 
         filtered_content = []
         # STEMMING
         stemmer = LancasterStemmer()
         for w in word_tokens:
+            #Cleaning Data
             if w not in stop_words:
+                #Change everything to lowercase
                 w = w.lower()
+                # #remove unicode characters
+                # w = w.encode('ascii', 'ignore').decode()
+                # #remove mentions e.g.: @Lakshay
+                # w = re.sub("@\S+", " ", w)
+                # #remove URLs
+                # w = re.sub("https*\S+", " ", w)
+                # #remove hastags
+                # w = re.sub("#\S+", " ", w)
+                # #remove punctuations
+                # w = re.sub('[%s]' % re.escape(string.punctuation), ' ', w)
+                # #remove overspaces
+                # w = re.sub('\s{2,}', " ", w)
+                #stemmer
                 word = stemmer.stem(w)
                 filtered_content.append(word)
 
         return filtered_content
+
+
 
 
 current_dir = dirname(__file__)
