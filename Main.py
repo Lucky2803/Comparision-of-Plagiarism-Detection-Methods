@@ -1,107 +1,102 @@
-import nltk
-#nltk.download('stopwords')
-#nltk.download('punkt')
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-# from nltk.stem import PorterStemmer
-from nltk.stem import LancasterStemmer
-import rabin_karp
-import numpy as np
-import string
-from os.path import dirname, join
+import KarpSimilarityChecker
+import spacy
+import Filtertext
+from pathlib import Path
+from collections import Counter
+from math import*
 import re
+WORD = re.compile(r"\w+")
 
 
-class PlagiarismChecker:
-    def __init__(self, file_a, file_b):
-        self.file_a = file_a
-        self.file_b = file_b
-        self.hash_table = {"a": [], "b": []}
-        self.k_gram = 5
-        content_a = self.get_file_content(self.file_a)
-        content_b = self.get_file_content(self.file_b)
-        self.calculate_hash(content_a, "a")
-        self.calculate_hash(content_b, "b")
+a = Path('Source.txt').read_text()
+b = Path('Test.txt').read_text()
 
-    # calculate hash value of the file content
-    # and add it to the document type hash table
-    def calculate_hash(self, content, doc_type):
-        text = self.prepare_content(content)
-        text = "".join(text)
+from Filtertext import filter_content
+
+Source = filter_content(a)
+Test = filter_content(b)
 
 
-        text = rabin_karp.rolling_hash(text, self.k_gram)
-        for _ in range(len(content) - self.k_gram + 1):
-            self.hash_table[doc_type].append(text.hash)
-            if text.next_window() == False:
-                break
+src = ""
+for i in Source:
+    src = src + i + " "
+
+#remove overspaces
+src = re.sub('\s{2,}', " ", src)
+
+# print(src)
+
+tst = ""
+for i in Test:
+    tst = tst + i + " "
+
+#remove overspaces
+tst = re.sub('\s{2,}', " ", tst)
+# print(tst)
 
 
-    def get_rate(self):
-        return self.calaculate_plagiarism_rate(self.hash_table)
+#Custom Plagiarism detector
+from KarpSimilarityChecker import checker
+print("Custom Plag detctor: ", str(round(checker.get_rate(),2)) ,'%')
 
-    # calculate the plagiarism rate using the plagiarism rate formula
-    def calaculate_plagiarism_rate(self, hash_table):
-        th_a = len(hash_table["a"])
-        th_b = len(hash_table["b"])
-        a = hash_table["a"]
-        b = hash_table["b"]
-        sh = len(np.intersect1d(a, b))
-        # print(sh, a, b)
-        # print(sh, th_a, th_b)
 
-        # Formular for plagiarism rate
-        # P = (2 * SH / THA * THB ) 100%
-        p = (float(2 * sh)/(th_a + th_b)) * 100
-        return p
+#Jaccard Similarity
+def jaccard_similarity(x,y):
+  intersection_cardinality = len(set.intersection(*[set(x), set(y)]))
+  union_cardinality = len(set.union(*[set(x), set(y)]))
+  return intersection_cardinality/float(union_cardinality)
 
-    # get content from file
-    def get_file_content(self, filename):
-        file = open(filename, 'r+', encoding="utf-8")
-        return file.read()
-
-    # Prepare content by removing stopwords, stemming and tokenizing
-    def prepare_content(self, content):
-
-        # STOP WORDS
-        stop_words = set(stopwords.words('english'))
-        word_tokens = word_tokenize(content)
-
-        filtered_content = []
-        # STEMMING
-        stemmer = LancasterStemmer()
-        for w in word_tokens:
-            #Cleaning Data
-
-            if w not in stop_words:
-
-                #Change everything to lowercase
-                w = w.lower()
-                #remove unicode characters
-                w = w.encode('ascii', 'ignore').decode()
-                #remove mentions e.g.: @Lakshay
-                w = re.sub("@\S+", " ", w)
-                #remove URLs
-                w = re.sub("https*\S+", " ", w)
-                #remove hastags
-                w = re.sub("#\S+", " ", w)
-                #remove punctuations
-                w = re.sub('[%s]' % re.escape(string.punctuation), ' ', w)
-                #remove overspaces
-                w = re.sub('\s{2,}', " ", w)
-                # stemmer
-                word = stemmer.stem(w)
-                filtered_content.append(word)
-
-        return filtered_content
+print("Jaccard Similarity: ", str(round(jaccard_similarity(Source, Test)*100,1)), "%")
 
 
 
+#Cosine Similaroty
+def get_cosine(vec1, vec2):
+    intersection = set(vec1.keys()) & set(vec2.keys())
+    numerator = sum([vec1[x] * vec2[x] for x in intersection])
 
-current_dir = dirname(__file__)
-checker = PlagiarismChecker(
-    join(current_dir, "Source.txt"),
-    join(current_dir, "Test.txt")
-)
+    sum1 = sum([vec1[x] ** 2 for x in list(vec1.keys())])
+    sum2 = sum([vec2[x] ** 2 for x in list(vec2.keys())])
+    denominator = sqrt(sum1) * sqrt(sum2)
 
-print('The percentage of plagiarism held by both documents is '+ str(round(checker.get_rate(),2)) +'%')
+    if not denominator:
+        return 0.0
+    else:
+        return float(numerator) / denominator
+
+def text_to_vector(text):
+    words = WORD.findall(text)
+    return Counter(words)
+
+
+vec1 = text_to_vector(src)
+vec2 = text_to_vector(tst)
+
+cosine = get_cosine(vec1, vec2)
+print("Cosine Similarity: ",str(round(cosine*100,1)), "%")
+
+
+#Eucledian Similarity
+def squared_sum(x):
+    return round(sqrt(sum([a * a for a in x])), 3)
+
+
+def euclidean_distance(x, y):
+    return sqrt(sum(pow(a - b, 2) for a, b in zip(x, y)))
+
+sentences = [src , tst]
+nlp = spacy.load('en_core_web_md')
+embeddings = [nlp(sentence).vector for sentence in sentences]
+
+distance = euclidean_distance(embeddings[0], embeddings[1])
+
+def distance_to_similarity(distance):
+  return 1/exp(distance)
+
+print("Eucledian Distance Approximation: ",str(round(distance_to_similarity(distance)*100,1)), "%")
+
+
+doc1 = nlp(src)
+doc2 = nlp(tst)
+print ("built in similarity function:",str(doc1.similarity(doc2)*100),'%')
+
