@@ -1,23 +1,23 @@
 # Plagiarism-Detector-String-Matching-
 
 The project presents comparision among various methods to design a text similarity checker that checks for plagiarsim between two text documents (Source and Test) by using 
-Jaccard Similarity,
-Cosine Similarity,
-Eucledian Distance and a
-Custom Rabin Karp Algorithm inspired method. 
+Jaccard Similarity,<br />
+Cosine Similarity,<br />
+Eucledian Distance and a<br />
+Custom Rabin Karp Algorithm inspired method. <br />
 
-NLP has been used to clean (removing stopwords, punctuations, URLs etc.), stem (Lancaster Stemmer) and tokenize the text before the initationg the similarity detection process.
+NLP has been used to clean (removing stopwords, punctuations, URLs etc.), stem (Lancaster Stemmer) and tokenize the text before the initationg the similarity detection process.<br />
 
 Rabin Karp Algortihm is the preferred choice for this project as it is based on hashing and the percentage of plagiarism can be scaled accordingly by generating and comparing hash values for the entire text. An accuarcy comparision has been made among the 4 methods.
-In the future, it is planned to incorporate Levenshtein Distance in combination with Rabin Karp alogrithm to imporve the accuracy of the checker.
+In the future, it is planned to incorporate Levenshtein Distance in combination with Rabin Karp alogrithm to imporve the accuracy of the checker.<br />
 
-Python Files:
-Main: for running all plag checks 
-Filtertext: To clean content (Data Pre Processing) before passing data to functions. 
-KarpSimiliarityCheck: For defining the custom plag detection class. 
-RabinKarp: For implementing the rabin karp string matching algorithm. 
+Python Files: <br />
+Main: for running all plag checks <br />
+Filtertext: To clean content (Data Pre Processing) before passing data to functions. <br />
+KarpSimiliarityCheck: For defining the custom plag detection class. <br />
+RabinKarp: For implementing the rabin karp string matching algorithm. <br />
 
-Txt files:
-Source: conatins the source document. 
-Test: conatins content similar to source file. 
+Txt files:<br />
+Source: conatins the source document. <br />
+Test: conatins content similar to source file. <br />
 
