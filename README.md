@@ -1,6 +1,6 @@
 # Plagiarism-Detector-String-Matching-
 
-The project presents comparision among various methods to design a text similarity checker that checks for plagiarsim between two text documents (Source and Test) by using 
+The project presents comparision among various methods to design a text similarity checker that checks for plagiarsim between two text documents (Source and Test) by using <br />
 Jaccard Similarity,<br />
 Cosine Similarity,<br />
 Eucledian Distance and a<br />
