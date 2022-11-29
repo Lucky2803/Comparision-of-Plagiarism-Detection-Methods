@@ -6,7 +6,9 @@ class rolling_hash:
     def get_hash(self, text, patternSize):
         hash_value = 0
         for i in range(0, patternSize):
-            hash_value = (hash_value + (ord(self.text[i]) - 96)*(self.base**(patternSize - i - 1))) % self.mod
+
+            #eg: H("cc")= ((3×26^1 ) % 5807 + (3×26^0) ) % 5807
+            hash_value = (hash_value + (ord(self.text[i]) - 26)*(self.base**(patternSize - i - 1))) % self.mod
         self.window_start = 0
         self.window_end = patternSize
 
