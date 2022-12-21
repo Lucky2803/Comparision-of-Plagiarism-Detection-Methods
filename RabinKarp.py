@@ -32,19 +32,19 @@ class rolling_hash:
         return self.text[self.window_start:self.window_end]
 
 
-def checker(text, pattern):
-    if text == "" or pattern == "":
-        return None
-    if len(pattern) > len(pattern):
-        return None
-
-    text_rolling = rolling_hash(text.lower(), len(pattern))
-    pattern_rolling = rolling_hash(pattern.lower(), len(pattern))
-
-    for _ in range(len(text)-len(pattern)+1):
-        print(pattern_rolling.hash, text_rolling.hash)
-        if text_rolling.hash == pattern_rolling.hash:
-            return "Found"
-        text_rolling.next_window()
-    return "Not Found"
+# def checker(text, pattern):
+#     if text == "" or pattern == "":
+#         return None
+#     if len(pattern) > len(pattern):
+#         return None
+#
+#     text_rolling = rolling_hash(text.lower(), len(pattern))
+#     pattern_rolling = rolling_hash(pattern.lower(), len(pattern))
+#
+#     for _ in range(len(text)-len(pattern)+1):
+#         print(pattern_rolling.hash, text_rolling.hash)
+#         if text_rolling.hash == pattern_rolling.hash:
+#             return "Found"
+#         text_rolling.next_window()
+#     return "Not Found"
 
