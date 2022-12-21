@@ -6,7 +6,7 @@ Cosine Similarity,<br />
 Eucledian Distance and a<br />
 Custom Rabin Karp Algorithm inspired method. <br />
 
-NLP has been used to clean (removing stopwords, punctuations, URLs etc.), stem (Lancaster Stemmer) and tokenize the text before the initationg the similarity detection process.<br />
+NLP has been used to clean (removing stopwords, punctuations, URLs etc.), stem (Porter Stemmer) and tokenize the text before the initationg the similarity detection process.<br />
 
 Rabin Karp Algortihm is the preferred choice for this project as it is based on hashing and the percentage of plagiarism can be scaled accordingly by generating and comparing hash values for the entire text. An accuarcy comparision has been made among the 4 methods.
 In the future, it is planned to incorporate Levenshtein Distance in combination with Rabin Karp alogrithm to imporve the accuracy of the checker.<br />
