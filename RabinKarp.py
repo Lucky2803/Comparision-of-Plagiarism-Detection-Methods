@@ -1,14 +1,14 @@
 class rolling_hash:
     def __init__(self, text, patternSize):
         self.text = text; self.patternSize = patternSize; self.base = 26; self.window_start = 0
-        self.window_end = 0; self.mod = 5807; self.hash = self.get_hash(text, patternSize)
+        self.window_end = 0; self.mod = pow(2,31)-1; self.hash = self.get_hash(text, patternSize)
 
     def get_hash(self, text, patternSize):
         hash_value = 0
         for i in range(0, patternSize):
 
-            #eg: H("cc")= ((3×26^1 ) % 5807 + (3×26^0) ) % 5807
-            hash_value = (hash_value + (ord(self.text[i]) - 26)*(self.base**(patternSize - i - 1))) % self.mod
+            #eg: H("cc")= ((3×26^1 ) % mod + (3×26^0) ) % mod
+            hash_value = (hash_value + (ord(self.text[i]) - 96)*(self.base**(patternSize - i - 1))) % self.mod
         self.window_start = 0
         self.window_end = patternSize
 
