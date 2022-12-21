@@ -21,3 +21,7 @@ Txt files:<br />
 Source: conatins the source document. <br />
 Test: conatins content similar to source file. <br />
 
+References:<br />
+
+https://www.ijstr.org/final-print/july2017/K-gram-As-A-Determinant-Of-Plagiarism-Level-In-Rabin-karp-Algorithm.pdf <br />
+https://www.researchgate.net/publication/316681173_Text_Documents_Plagiarism_Detection_using_Rabin-Karp_and_Jaro-Winkler_Distance_Algorithms <br />
